@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <title>Game Theory</title>
+  <link href="styles/index.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
+    integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+</head>
+
+<body>
+  <h1 class="text-center">Виключення домінованих стратегій</h1>
+  <h2 class="text-center">Введіть кількість стратегій:</h2>
+  <div class="container">
+    <div class="row text-center">
+      <div class="col-sm-6">
+        <div class="row">
+          <div class="col-sm-6">
+            <div class="row text-center">
+              <div class="col">
+                <label for="firstPlayerStrategies">
+                  <p>Гравець 1: </p>
+                </label>
+                <input class="form-control" id="firstPlayerStrategies" max="10" min="1" type="number" value="3">
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="row text-center">
+              <div class="col">
+                <label for="secondPlayerStrategies">
+                  <p>Гравець 2: </p>
+                </label>
+                <input class="form-control" id="secondPlayerStrategies" max="10" min="1" type="number" value="3">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row text-center mt-3">
+          <div class="col-sm-4 offset-sm-4">
+            <button class="btn btn-primary btn-generate">Згенерувати</button>
+          </div>
+        </div>
+      </div>
+      <section class="col-sm-6" id="generationSection">
+        <div class="row">
+          <div class="col-sm-6">
+            <div class="row">
+              <div class="col">
+                <label for="minValue">
+                  <p>Від</p>
+                </label>
+                <input class="form-control" id="minValue" max="100" min="-100" placeholder="Min value" type="number"
+                  value="-9">
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="row text-center">
+              <div class="col">
+                <label for="maxValue">
+                  <p>До</p>
+                </label>
+                <input class="form-control" id="maxValue" max="100" min="-100" placeholder="Max value" type="number"
+                  value="9">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row text-center mt-3">
+          <div class="col-sm-4 offset-sm-4">
+            <button class="btn btn-dark btn-fill">Рандомні платежі</button>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+  <section class="container mt-3" id="functions">
+    <div class="row">
+      <div class="col-sm-12">
+        <ul class="nav nav-tabs">
+          <li class="nav-item"><a class="nav-link active" href="#gameMatrix" id="gameMatrixTab">Матриця гри</a></li>
+          <li class="nav-item"><a class="nav-link" href="#simplify" id="simplifyYourselfTab">Спростити власноруч</a></li>
+          <li class="nav-item"><a class="nav-link" href="#reactionGame" id="reactionFunctionTab">Функція реакції</a></li>
+          <li class="nav-item"><a class="nav-link" href="#gamePrice" id="gamePriceTab">Ціна гри</a></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+  <section class="container tabs mt-2">
+    <div class="tab-content">
+      <div class="tab-pane fade show active col-sm-12" id="gameMatrix">
+        <div class="container">
+          <div class="text-center">
+            <h4>Початкова таблиця</h4>
+          </div>
+          <div class="text-center">
+            <table id="startTable"></table>
+          </div>
+          <div class="text-center">
+            <div class="col-sm-12">
+              <button class="btn btn-outline-dark" id="simplifyGame">Спростити гру</button>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-12" id="simplified"></div>
+          </div>
+        </div>
+      </div>
+      <div class="tab-pane fade col-sm-12" id="simplify">
+        <div class="text-center">
+          <button class="btn btn-info btn-crop"><i class="fa fa-times-circle"></i> Видалити стратегію</button>
+          <button class="btn btn-danger btn-clean"><i class="fa fa-trash"></i> Почати спочатку</button>
+        </div>
+        <div class="text-center">
+          <h4>Початкова таблиця</h4>
+        </div>
+        <div class="row">
+          <div class="col-sm-12 col-md-8 offset-md-2">
+            <div id="cropTable"></div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12 col-md-8 offset-md-2">
+            <div id="restOfCrops"></div>
+          </div>
+        </div>
+      </div>
+      <div class="tab-pane fade col-sm-12" id="reactionGame">
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="text-center">
+              <h4>Гравець 1</h4>
+            </div>
+            <div class="row" id="tableFirstPlayer"></div>
+          </div>
+          <div class="col-sm-12">
+            <div class="text-center">
+              <div class="col-sm-12">
+                <label for="showSecondPlayer">
+                  <span>Показати другого гравця</span>
+                </label>
+                <input class="filled-in" name="showSecondPlayer" id="showSecondPlayer" type="checkbox">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-12" id="playerTwoField">
+                <div class="text-center">
+                  <h4>Гравець 2</h4>
+                </div>
+                <div class="row" id="tableSecondPlayer"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row text-center">
+          <div class="col-sm-12">
+            <button class="btn btn-outline-dark btn-react-findPrice">Визначити функції реакції</a>
+          </div>
+        </div>
+        <div class="row text-center fade row-player-reactions">
+          <div class="col-sm-12" id="firstPlayerMaxes">
+            <div class="row">
+              <h4>Гравець 1</h4>
+            </div>
+            <div class="card-panel deep-purple lighten-3"></div>
+          </div>
+          <div class="col-sm-12" id="secondPlayerMaxes">
+            <div class="row">
+              <h4>Гравець 2</h4>
+            </div>
+            <div class="card-panel deep-purple lighten-3"></div>
+          </div>
+        </div>
+      </div>
+      <div class="tab-pane fade col-sm-12" id="gamePrice">
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="text-center">
+              <h4>Ціна гри</h4>
+            </div>
+            <div id="gamePricePlace"></div>
+          </div>
+        </div>
+        <div class="row text-center">
+          <div class="col-sm-12">
+            <button class="btn btn-outline-dark btn-find-extremums">Знайти ціну гри</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <h2>Чебоксарова Н. І. ПІ-56</h2>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.5.0/knockout-min.js"></script>
+  <script defer src="scripts/index.js"></script>
+</body>
+
+</html>
